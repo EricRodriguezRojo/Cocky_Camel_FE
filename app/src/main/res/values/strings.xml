@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">CockyCamel</string>
+    <string name="home_title">Pantalla Inicial</string>
+    <string name="login_title">Iniciar Sesión</string>
+    <string name="nurses_title">Lista de Enfermeros</string>
+    <string name="search_title">Buscar Enfermeros</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Registro</string>
+    <string name="btn_search">Buscar</string>
+</resources>
