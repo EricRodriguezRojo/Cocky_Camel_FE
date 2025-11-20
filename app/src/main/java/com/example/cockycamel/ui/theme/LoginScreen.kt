@@ -1,5 +1,6 @@
 package com.example.cockycamel.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -21,11 +23,8 @@ fun LoginScreen(
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
-
-    var showDialog by remember { mutableStateOf(false) }
-    var dialogMessage by remember { mutableStateOf("") }
-    var dialogTitle by remember { mutableStateOf("") }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -83,35 +82,17 @@ fun LoginScreen(
             Button(
                 onClick = {
                     if (username == "admin" && password == "1234") {
-                        dialogTitle = "¡Éxito!"
-                        dialogMessage = "Inicio de sesión correcto."
+                        Toast.makeText(context, "Inicio de sesión correcto.", Toast.LENGTH_SHORT).show()
+
+                        // aquí irá la navegación
+
                     } else {
-                        dialogTitle = "Error"
-                        dialogMessage = "Datos erróneos. Inténtalo de nuevo."
+                        Toast.makeText(context, "Datos erróneos. Inténtalo de nuevo.", Toast.LENGTH_SHORT).show()
                     }
-                    showDialog = true
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Iniciar Sesión")
-            }
-
-            if (showDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = { Text(text = dialogTitle) },
-                    text = { Text(text = dialogMessage) },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                showDialog = false
-                                // if (username == "admin" && password == "1234") { navegar... }
-                            }
-                        ) {
-                            Text("Aceptar")
-                        }
-                    }
-                )
             }
         }
     }
