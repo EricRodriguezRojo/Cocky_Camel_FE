@@ -22,6 +22,11 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
+    var dialogTitle by remember { mutableStateOf("") }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -76,10 +81,37 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                onClick = { /* Navegación a Home */ },
+                onClick = {
+                    if (username == "admin" && password == "1234") {
+                        dialogTitle = "¡Éxito!"
+                        dialogMessage = "Inicio de sesión correcto."
+                    } else {
+                        dialogTitle = "Error"
+                        dialogMessage = "Datos erróneos. Inténtalo de nuevo."
+                    }
+                    showDialog = true
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Iniciar Sesión")
+            }
+
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    title = { Text(text = dialogTitle) },
+                    text = { Text(text = dialogMessage) },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                showDialog = false
+                                // if (username == "admin" && password == "1234") { navegar... }
+                            }
+                        ) {
+                            Text("Aceptar")
+                        }
+                    }
+                )
             }
         }
     }
