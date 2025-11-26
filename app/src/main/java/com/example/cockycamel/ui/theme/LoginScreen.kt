@@ -23,8 +23,10 @@ fun LoginScreen(
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val context = LocalContext.current
 
+    var showForgotPassword by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -83,9 +85,7 @@ fun LoginScreen(
                 onClick = {
                     if (username == "admin" && password == "1234") {
                         Toast.makeText(context, "Inicio de sesión correcto.", Toast.LENGTH_SHORT).show()
-
-                        // aquí irá la navegación
-
+                        // navegacion aqui
                     } else {
                         Toast.makeText(context, "Datos erróneos. Inténtalo de nuevo.", Toast.LENGTH_SHORT).show()
                     }
@@ -93,6 +93,25 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Iniciar Sesión")
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            TextButton(
+                onClick = {
+                    showForgotPassword = !showForgotPassword
+                }
+            ) {
+                Text("¿Has olvidado tu contraseña?")
+            }
+
+            if (showForgotPassword) {
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = "Contacta con un administrador para restablecer tus credenciales.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
             }
         }
     }
