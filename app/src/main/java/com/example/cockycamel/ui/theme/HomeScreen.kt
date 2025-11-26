@@ -33,21 +33,21 @@ fun HomeScreen() {
 
         Button(onClick = { /* navegación luego */ }, modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Ir a Login")
+            Text("Iniciar Sesión")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = { /* navegación luego */ }, modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Ir a Registro")
+            Text("Mostrar Lista Enfermeros")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = { /* navegación luego */ }, modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Ir a Búsqueda")
+            Text("Buscar Enfermero")
         }
 
         Spacer(modifier = Modifier.height(30.dp))
