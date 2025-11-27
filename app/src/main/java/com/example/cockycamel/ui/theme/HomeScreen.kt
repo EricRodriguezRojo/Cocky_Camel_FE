@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -33,14 +34,14 @@ fun HomeScreen(onBack: () -> Unit) {
 
         Image(
             painter = painterResource(id = R.drawable.img_home),
-            contentDescription = "Icono de inicio",
+            contentDescription = stringResource(R.string.home_icon_desc),
             modifier = Modifier.size(350.dp)
         )
 
         Spacer(modifier = Modifier.height(40.dp))
 
         Text(
-            text = "Bienvenido a CockyCamel, la herramienta diseñada para facilitar y agilizar tu trabajo como profesional de enfermería.",
+            text = stringResource(R.string.home_welcome_text),
             textAlign = TextAlign.Center,
             color = Color.Black,
             modifier = Modifier.padding(bottom = 8.dp)
@@ -51,13 +52,19 @@ fun HomeScreen(onBack: () -> Unit) {
         Button(
             onClick = { onBack() }
         ) {
-            Text("Volver Atras")
+            Text(stringResource(R.string.btn_go_back))
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        val toggleText = if (showDateTime) {
+            stringResource(R.string.action_hide_datetime)
+        } else {
+            stringResource(R.string.action_show_datetime)
+        }
+
         Text(
-            text = if (showDateTime) "Ocultar fecha y hora" else "Mostrar fecha y hora",
+            text = toggleText,
             modifier = Modifier
                 .clickable {
                     showDateTime = !showDateTime
@@ -80,7 +87,5 @@ fun HomeScreen(onBack: () -> Unit) {
                 color = Color.Black
             )
         }
-
-
     }
 }

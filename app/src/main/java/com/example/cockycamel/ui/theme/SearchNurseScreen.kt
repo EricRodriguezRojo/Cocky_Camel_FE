@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cockycamel.R
 
@@ -33,38 +34,43 @@ fun SearchNurseScreen(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(24.dp)
     ) {
         OutlinedTextField(
             value = searchText,
             onValueChange = { searchText = it },
-            label = { Text("Buscar") },
-            leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+            label = { Text(stringResource(R.string.search_hint)) },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = stringResource(R.string.search_icon_desc)
+                )
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Resultados de la búsqueda",
+            text = stringResource(R.string.search_results_header),
             style = MaterialTheme.typography.titleMedium
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(searchResults) { enfermero ->
                 EnfermeroCard(enfermero = enfermero)
             }
         }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
             onClick = { onBack() }
         ) {
-            Text("Volver Atras")
+            Text(stringResource(R.string.btn_go_back))
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -80,6 +86,7 @@ fun EnfermeroCard(enfermero: Enfermero) {
             .fillMaxWidth()
             .clickable { isExpanded = !isExpanded }
             .animateContentSize(),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -92,22 +99,24 @@ fun EnfermeroCard(enfermero: Enfermero) {
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.img_home),
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.profile_placeholder_desc),
                         tint = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier.padding(8.dp)
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))
+
                 Text(
                     text = enfermero.nombre,
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
+
             if (isExpanded) {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
-                    text = enfermero.especialidad,
-                    style = MaterialTheme.typography.bodySmall,
+                    text = stringResource(R.string.nurse_specialty_format, enfermero.especialidad),
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(start = 56.dp)
                 )

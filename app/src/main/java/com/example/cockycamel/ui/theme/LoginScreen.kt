@@ -13,9 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.cockycamel.R
 
 @Composable
 fun LoginScreen(onBack: () -> Unit) {
@@ -40,7 +42,7 @@ fun LoginScreen(onBack: () -> Unit) {
 
             Icon(
                 imageVector = Icons.Default.Person,
-                contentDescription = "Login icon",
+                contentDescription = stringResource(R.string.login_icon_desc),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier
                     .size(100.dp)
@@ -52,7 +54,7 @@ fun LoginScreen(onBack: () -> Unit) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Bienvenido",
+                text = stringResource(R.string.login_welcome),
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -62,7 +64,7 @@ fun LoginScreen(onBack: () -> Unit) {
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Usuario") },
+                label = { Text(stringResource(R.string.login_label_username)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -71,7 +73,7 @@ fun LoginScreen(onBack: () -> Unit) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
+                label = { Text(stringResource(R.string.login_label_password)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth()
@@ -82,15 +84,22 @@ fun LoginScreen(onBack: () -> Unit) {
             Button(
                 onClick = {
                     if (username == "admin" && password == "1234") {
-                        Toast.makeText(context, "Inicio de sesión correcto.", Toast.LENGTH_SHORT).show()
-                        // navegacion aqui
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.login_toast_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(context, "Datos erróneos. Inténtalo de nuevo.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.login_toast_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Iniciar Sesión")
+                Text(stringResource(R.string.btn_login))
             }
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -100,13 +109,13 @@ fun LoginScreen(onBack: () -> Unit) {
                     showForgotPassword = !showForgotPassword
                 }
             ) {
-                Text("¿Has olvidado tu contraseña?")
+                Text(stringResource(R.string.btn_forgot_password))
             }
 
             if (showForgotPassword) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = "Contacta con un administrador para restablecer tus credenciales.",
+                    text = stringResource(R.string.login_forgot_password_info),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.secondary
                 )
@@ -116,7 +125,7 @@ fun LoginScreen(onBack: () -> Unit) {
             Button(
                 onClick = { onBack() }
             ) {
-                Text("Volver Atras")
+                Text(stringResource(R.string.btn_go_back))
             }
 
             Spacer(modifier = Modifier.height(10.dp))
