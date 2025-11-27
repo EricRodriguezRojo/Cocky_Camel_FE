@@ -18,9 +18,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoginScreen(
-    modifier: Modifier = Modifier
-) {
+fun LoginScreen(onBack: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -113,6 +111,15 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Button(
+                onClick = { onBack() }
+            ) {
+                Text("Volver Atras")
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

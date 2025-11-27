@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -26,7 +27,7 @@ data class Nurse(
 )
 
 @Composable
-fun NurseListScreen(modifier: Modifier = Modifier) {
+fun NursesListScreen(onBack: () -> Unit) {
 
     val enfermeros = listOf(
         Nurse("María López", "Pediatría", 5),
@@ -57,6 +58,15 @@ fun NurseListScreen(modifier: Modifier = Modifier) {
                 NurseCard(enfermero)
             }
         }
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = { onBack() }
+        ) {
+            Text("Volver Atras")
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
