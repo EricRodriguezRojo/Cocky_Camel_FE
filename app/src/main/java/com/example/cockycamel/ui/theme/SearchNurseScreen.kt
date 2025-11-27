@@ -1,4 +1,4 @@
-package com.example.cockycamel.ui.theme
+package com.example.cockycamel.ui
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
@@ -14,14 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.cockycamel.R
 
 data class Enfermero(val id: Int, val nombre: String, val especialidad: String)
 
 @Composable
-fun SearchNurseScreen() {
+fun SearchNurseScreen(onBack: () -> Unit) {
     var searchText by remember { mutableStateOf("") }
 
     val searchResults = listOf(
@@ -60,6 +59,15 @@ fun SearchNurseScreen() {
                 EnfermeroCard(enfermero = enfermero)
             }
         }
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = { onBack() }
+        ) {
+            Text("Volver Atras")
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
@@ -83,7 +91,7 @@ fun EnfermeroCard(enfermero: Enfermero) {
                     color = MaterialTheme.colorScheme.secondary
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_nurse),
+                        painter = painterResource(R.drawable.img_home),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSecondary,
                         modifier = Modifier.padding(8.dp)
@@ -104,16 +112,6 @@ fun EnfermeroCard(enfermero: Enfermero) {
                     modifier = Modifier.padding(start = 56.dp)
                 )
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSearchScreen() {
-    MaterialTheme {
-        Surface {
-            SearchNurseScreen()
         }
     }
 }
