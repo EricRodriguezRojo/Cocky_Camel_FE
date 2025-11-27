@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.cockycamel.R
@@ -44,7 +45,7 @@ fun NursesListScreen(onBack: () -> Unit) {
     ) {
 
         Text(
-            text = "Lista de enfermeros",
+            text = stringResource(R.string.nurses_list_title),
             fontSize = 26.sp,
             color = Color.Black
         )
@@ -63,7 +64,7 @@ fun NursesListScreen(onBack: () -> Unit) {
         Button(
             onClick = { onBack() }
         ) {
-            Text("Volver Atras")
+            Text(stringResource(R.string.btn_go_back))
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -87,7 +88,6 @@ fun NurseCard(nurse: Nurse) {
                 .padding(16.dp)
         ) {
 
-            // información sin expandirse
             Row(verticalAlignment = Alignment.CenterVertically) {
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -99,19 +99,18 @@ fun NurseCard(nurse: Nurse) {
                 )
             }
 
-            // informacion al expamndirse
             if (expanded.value) {
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = "Especialidad: ${nurse.especialidad}",
+                    text = stringResource(R.string.nurse_specialty_format, nurse.especialidad),
                     fontSize = 16.sp,
                     color = Color.DarkGray
                 )
 
                 Text(
-                    text = "Experiencia: ${nurse.experiencia} años",
+                    text = stringResource(R.string.nurse_experience_format, nurse.experiencia),
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
