@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">CockyCamel</string>
+
+    <string name="home_icon_desc">Icono de inicio</string>
+    <string name="home_welcome_text">Bienvenido a CockyCamel, la herramienta diseñada para facilitar y agilizar tu trabajo como profesional de enfermería.</string>
+    <string name="btn_go_back">Volver Atrás</string>
+    <string name="action_hide_datetime">Ocultar fecha y hora</string>
+    <string name="action_show_datetime">Mostrar fecha y hora</string>
+
+    <string name="login_icon_desc">Icono de login</string>
+    <string name="login_welcome">Bienvenido</string>
+    <string name="login_label_username">Usuario</string>
+    <string name="login_label_password">Contraseña</string>
+    <string name="login_toast_success">Inicio de sesión correcto.</string>
+    <string name="login_toast_error">Datos erróneos. Inténtalo de nuevo.</string>
+    <string name="btn_login">Iniciar Sesión</string>
+    <string name="btn_forgot_password">¿Has olvidado tu contraseña?</string>
+    <string name="login_forgot_password_info">Contacta con un administrador para restablecer tus credenciales.</string>
+
+    <string name="nurses_list_title">Lista de enfermeros</string>
+    <string name="nurse_specialty_format">Especialidad: %1$s</string>
+    <string name="nurse_experience_format">Experiencia: %1$d años</string>
+
+    <string name="search_hint">Buscar</string>
+    <string name="search_results_header">Resultados de la búsqueda</string>
+    <string name="search_icon_desc">Icono de búsqueda</string>
+    <string name="profile_placeholder_desc">Imagen de perfil</string>
+
 </resources>
