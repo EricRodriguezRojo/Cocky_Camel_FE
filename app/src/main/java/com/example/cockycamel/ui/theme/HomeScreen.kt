@@ -14,43 +14,47 @@ import androidx.compose.ui.unit.dp
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.example.cockycamel.R
+import androidx.compose.ui.text.style.TextAlign
+
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onBack: () -> Unit) {
 
     var showDateTime by remember { mutableStateOf(false) }
     var dateTimeText by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp),
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
 
-        Image(painter = painterResource(id = R.drawable.img_home),
+        Image(
+            painter = painterResource(id = R.drawable.img_home),
             contentDescription = "Icono de inicio",
             modifier = Modifier.size(350.dp)
         )
 
-        Button(onClick = { /* navegación luego */ }, modifier = Modifier.fillMaxWidth()
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Text(
+            text = "Bienvenido a CockyCamel, la herramienta diseñada para facilitar y agilizar tu trabajo como profesional de enfermería.",
+            textAlign = TextAlign.Center,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = { onBack() }
         ) {
-            Text("Iniciar Sesión")
+            Text("Volver Atras")
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = { /* navegación luego */ }, modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Mostrar Lista Enfermeros")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = { /* navegación luego */ }, modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Buscar Enfermero")
-        }
-
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = if (showDateTime) "Ocultar fecha y hora" else "Mostrar fecha y hora",
@@ -68,7 +72,6 @@ fun HomeScreen() {
             color = Color(0xFF00897B)
         )
 
-
         if (showDateTime) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
@@ -77,6 +80,7 @@ fun HomeScreen() {
                 color = Color.Black
             )
         }
+
 
     }
 }
