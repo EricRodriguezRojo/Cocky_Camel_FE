@@ -1,22 +1,25 @@
 package com.example.cockycamel.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.cockycamel.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.example.cockycamel.R
-import androidx.compose.ui.text.style.TextAlign
-
 
 @Composable
 fun HomeScreen(onBack: () -> Unit) {
@@ -27,6 +30,7 @@ fun HomeScreen(onBack: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -43,14 +47,19 @@ fun HomeScreen(onBack: () -> Unit) {
         Text(
             text = stringResource(R.string.home_welcome_text),
             textAlign = TextAlign.Center,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = { onBack() }
+            onClick = { onBack() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Text(stringResource(R.string.btn_go_back))
         }
@@ -76,7 +85,9 @@ fun HomeScreen(onBack: () -> Unit) {
                     }
                 }
                 .padding(8.dp),
-            color = Color(0xFF00897B)
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp
         )
 
         if (showDateTime) {
@@ -84,7 +95,8 @@ fun HomeScreen(onBack: () -> Unit) {
             Text(
                 text = dateTimeText,
                 modifier = Modifier.padding(horizontal = 16.dp),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.tertiary,
+                fontWeight = FontWeight.Medium
             )
         }
     }
