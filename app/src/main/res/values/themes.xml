@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.CockyCamel" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/orange_dark</item>
 
-    <style name="Theme.CockyCamel" parent="android:Theme.Material.Light.NoActionBar" />
+        <item name="android:colorPrimary">@color/orange_primary</item>
+        <item name="android:colorBackground">@color/orange_background</item>
+    </style>
 </resources>
