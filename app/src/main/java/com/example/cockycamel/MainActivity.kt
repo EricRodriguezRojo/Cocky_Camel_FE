@@ -1,42 +1,74 @@
 package com.example.cockycamel
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-
-import androidx.compose.runtime.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.cockycamel.ui.theme.CockyCamelTheme
-import com.example.cockycamel.ui.HomeScreen
-import com.example.cockycamel.ui.LoginScreen
-import com.example.cockycamel.ui.NursesListScreen
-import com.example.cockycamel.ui.SearchNurseScreen
-
+import com.example.cockycamel.ui.*
+import com.example.cockycamel.ui.AppViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CockyCamelTheme {
-                AppScreen()
+                val viewModel: AppViewModel = viewModel()
+                val navController = rememberNavController()
+
+                NavHost(navController = navController, startDestination = "Main") {
+
+                    composable("Main") {
+                        MainScreen(navController)
+                    }
+
+                    composable("Home") {
+                        HomeScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("Login") {
+                        LoginScreen(
+                            viewModel = viewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("List") {
+                        NursesListScreen(
+                            viewModel = viewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("Search") {
+                        SearchNurseScreen(
+                            viewModel = viewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(
-    goHome: () -> Unit,
-    goLogin: () -> Unit,
-    goList: () -> Unit,
-    goSearch: () -> Unit
-) {
+fun MainScreen(navController: NavController) {
 
     Column(
         modifier = Modifier
@@ -63,7 +95,7 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(
-            onClick = goHome,
+            onClick = { navController.navigate("Home") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Ir a HomeScreen")
@@ -72,7 +104,7 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = goLogin,
+            onClick = { navController.navigate("Login") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Login")
@@ -81,7 +113,7 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = goList,
+            onClick = { navController.navigate("List") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Lista de enfermeros")
@@ -90,43 +122,10 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = goSearch,
+            onClick = { navController.navigate("Search") },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Buscar enfermero")
         }
-    }
-}
-
-
-@Composable
-fun AppScreen() {
-
-    var numPantalla by remember { mutableStateOf(0) }
-
-    when (numPantalla) {
-
-        0 -> MainScreen(
-            goHome = { numPantalla = 1 },
-            goLogin = { numPantalla = 2 },
-            goList = { numPantalla = 3 },
-            goSearch = { numPantalla = 4 }
-        )
-
-        1 -> HomeScreen(
-            onBack = { numPantalla = 0 }
-        )
-
-        2 -> LoginScreen(
-            onBack = { numPantalla = 0 }
-        )
-
-        3 -> NursesListScreen(
-            onBack = { numPantalla = 0 }
-        )
-
-        4 -> SearchNurseScreen(
-            onBack = { numPantalla = 0 }
-        )
     }
 }
