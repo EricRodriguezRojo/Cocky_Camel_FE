@@ -1,4 +1,4 @@
-package com.example.cockycamel.ui.theme
+package com.example.cockycamel.ui
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,6 @@ class AppViewModel : ViewModel() {
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
     init {
-        // Inicializamos los datos simulados [cite: 913, 914]
         val datosIniciales = listOf(
             Nurse(1, "María López", "Pediatría", 5),
             Nurse(2, "Juan Pérez", "Urgencias", 8),
