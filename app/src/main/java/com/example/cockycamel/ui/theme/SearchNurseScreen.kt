@@ -19,17 +19,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.cockycamel.R
 
-data class Enfermero(val id: Int, val nombre: String, val especialidad: String)
-
 @Composable
-fun SearchNurseScreen(onBack: () -> Unit) {
+fun SearchNurseScreen(viewModel: AppViewModel, onBack: () -> Unit) {
     var searchText by remember { mutableStateOf("") }
 
-    val searchResults = listOf(
-        Enfermero(1, "Ana García", "Pediatría"),
-        Enfermero(2, "Juan Pérez", "Urgencias"),
-        Enfermero(3, "María López", "UCI")
-    ).filter { it.nombre.contains(searchText, ignoreCase = true) }
+    val uiState by viewModel.uiState.collectAsState()
+
+    val searchResults = uiState.enfermeros.filter {
+        it.nombre.contains(searchText, ignoreCase = true)
+    }
 
 
     Column(
@@ -92,7 +90,7 @@ fun SearchNurseScreen(onBack: () -> Unit) {
 }
 
 @Composable
-fun EnfermeroCard(enfermero: Enfermero) {
+fun EnfermeroCard(enfermero: Nurse) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Card(
