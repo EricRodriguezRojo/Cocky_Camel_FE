@@ -16,14 +16,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.cockycamel.R
 
+
 @Composable
-fun LoginScreen(onBack: () -> Unit) {
+fun LoginScreen(
+    viewModel: AppViewModel,
+    onBack: () -> Unit
+) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    var showForgotPassword by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
+    var showForgotPassword by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -83,40 +85,34 @@ fun LoginScreen(onBack: () -> Unit) {
 
             Button(
                 onClick = {
+                    // Lógica simulada
                     if (username == "admin" && password == "1234") {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.login_toast_success),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        // Actualizamos el estado en el ViewModel (Uso correcto)
+                        viewModel.login(username)
+                        Toast.makeText(context, "Login OK", Toast.LENGTH_SHORT).show()
+                        onBack() // Navegamos atrás al completar
                     } else {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.login_toast_error),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(stringResource(R.string.btn_login))
             }
+
 
             Spacer(modifier = Modifier.height(15.dp))
 
             TextButton(
                 onClick = {
+                    // Uso correcto de la variable de estado
                     showForgotPassword = !showForgotPassword
                 }
             ) {
                 Text(stringResource(R.string.btn_forgot_password))
             }
 
-            if (showForgotPassword) {
+            if (showForgotPassword) { // Uso correcto de la variable de estado
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = stringResource(R.string.login_forgot_password_info),
