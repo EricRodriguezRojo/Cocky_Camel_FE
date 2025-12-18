@@ -9,67 +9,50 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.cockycamel.ui.AppViewModel
 
 @Composable
 fun RegisterScreen(viewModel: AppViewModel, onBack: () -> Unit) {
-    var nombre by remember { mutableStateOf("") }
-    var especialidad by remember { mutableStateOf("") }
-    var experiencia by remember { mutableStateOf("") }
-
+    var usuario by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        modifier = Modifier.fillMaxSize().padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Registro de Nuevo Enfermero",
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(vertical = 20.dp)
-        )
+        Text("Crear nueva cuenta", style = MaterialTheme.typography.headlineMedium)
 
         OutlinedTextField(
-            value = nombre,
-            onValueChange = { nombre = it },
-            label = { Text("Nombre completo") },
+            value = usuario,
+            onValueChange = { usuario = it },
+            label = { Text("Nombre de usuario") },
             modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)
         )
 
         OutlinedTextField(
-            value = especialidad,
-            onValueChange = { especialidad = it },
-            label = { Text("Especialidad") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)
-        )
-
-        OutlinedTextField(
-            value = experiencia,
-            onValueChange = { experiencia = it },
-            label = { Text("Años de experiencia") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp)
         )
 
         Button(
             onClick = {
-                if (nombre.isNotBlank() && especialidad.isNotBlank()) {
-                    val expInt = experiencia.toIntOrNull() ?: 0
-
-                    viewModel.agregarEnfermero(nombre, especialidad, expInt)
-                    Toast.makeText(context, "Enfermero $nombre registrado con éxito", Toast.LENGTH_SHORT).show()
+                if (usuario.isNotBlank() && password.isNotBlank()) {
+                    viewModel.registrarUsuario(usuario, password)
+                    Toast.makeText(context, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show()
                     onBack()
                 } else {
-                    Toast.makeText(context, "Por favor, rellena los campos obligatorios", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Rellena todos los campos", Toast.LENGTH_SHORT).show()
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Registrar")
+            Text("Registrarse")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
