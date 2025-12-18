@@ -9,7 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,9 +27,7 @@ fun NursesListScreen(viewModel: AppViewModel, onBack: () -> Unit) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(24.dp)
-        ) {
-
-
+    ) {
         Text(
             text = stringResource(R.string.nurses_list_title),
             fontSize = 26.sp,
@@ -42,7 +40,7 @@ fun NursesListScreen(viewModel: AppViewModel, onBack: () -> Unit) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(enfermeros) { enfermero -> // Usamos la lista del ViewModel
+            items(enfermeros) { enfermero ->
                 NurseCard(enfermero)
             }
         }
@@ -63,23 +61,34 @@ fun NursesListScreen(viewModel: AppViewModel, onBack: () -> Unit) {
 
 @Composable
 fun NurseCard(nurse: Nurse) {
-
-    val expanded = remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { expanded.value = !expanded.value },
+            .clickable { expanded = !expanded }
+            .animateContentSize(),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
-
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Spacer(modifier = Modifier.width(8.dp))
+                Surface(
+                    modifier = Modifier.size(40.dp),
+                    shape = androidx.compose.foundation.shape.CircleShape,
+                    color = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.img_home),
+                        contentDescription = stringResource(R.string.profile_placeholder_desc),
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
                     text = nurse.nombre,
@@ -89,20 +98,27 @@ fun NurseCard(nurse: Nurse) {
                 )
             }
 
-            if (expanded.value) {
-
+            if (expanded) {
                 Spacer(modifier = Modifier.height(12.dp))
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f),
+                    thickness = 1.dp,
+                    modifier = Modifier.padding(start = 56.dp, bottom = 8.dp)
+                )
 
                 Text(
                     text = stringResource(R.string.nurse_specialty_format, nurse.especialidad),
                     fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.tertiary
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(start = 56.dp)
                 )
 
                 Text(
                     text = stringResource(R.string.nurse_experience_format, nurse.experiencia),
                     fontSize = 14.sp,
-                    color = Color.Gray
+                    color = androidx.compose.ui.graphics.Color.Gray,
+                    modifier = Modifier.padding(start = 56.dp)
                 )
             }
         }
