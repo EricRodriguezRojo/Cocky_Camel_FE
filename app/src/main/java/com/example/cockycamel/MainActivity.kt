@@ -60,6 +60,22 @@ class MainActivity : ComponentActivity() {
 
                     composable("Home") {
                         HomeScreen(
+                            onNavigateToList = { navController.navigate("ListNurses") },
+                            onNavigateToSearch = { navController.navigate("SearchNurses") },
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("ListNurses") {
+                        NursesListScreen(
+                            viewModel = viewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("SearchNurses") {
+                        SearchNurseScreen(
+                            viewModel = viewModel,
                             onBack = { navController.popBackStack() }
                         )
                     }
