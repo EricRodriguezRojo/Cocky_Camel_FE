@@ -22,8 +22,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun HomeScreen(onBack: () -> Unit) {
-
+fun HomeScreen(
+    onNavigateToList: () -> Unit,
+    onNavigateToSearch: () -> Unit,
+    onBack: () -> Unit
+) {
     var showDateTime by remember { mutableStateOf(false) }
     var dateTimeText by remember { mutableStateOf("") }
 
@@ -35,22 +38,42 @@ fun HomeScreen(onBack: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         Image(
             painter = painterResource(id = R.drawable.img_home),
             contentDescription = stringResource(R.string.home_icon_desc),
-            modifier = Modifier.size(350.dp)
+            modifier = Modifier.size(250.dp)
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Text(
             text = stringResource(R.string.home_welcome_text),
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(bottom = 8.dp)
+            style = MaterialTheme.typography.headlineSmall
         )
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+
+        Button(
+            onClick = { onNavigateToList() },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+        ) {
+            Text("Listar Enfermeros")
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = { onNavigateToSearch() },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+        ) {
+            Text("Buscar Enfermeros")
+        }
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -77,7 +100,6 @@ fun HomeScreen(onBack: () -> Unit) {
             modifier = Modifier
                 .clickable {
                     showDateTime = !showDateTime
-
                     if (showDateTime) {
                         val current = LocalDateTime.now()
                         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
@@ -86,15 +108,12 @@ fun HomeScreen(onBack: () -> Unit) {
                 }
                 .padding(8.dp),
             color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
+            fontWeight = FontWeight.Bold
         )
 
         if (showDateTime) {
-            Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = dateTimeText,
-                modifier = Modifier.padding(horizontal = 16.dp),
                 color = MaterialTheme.colorScheme.tertiary,
                 fontWeight = FontWeight.Medium
             )
