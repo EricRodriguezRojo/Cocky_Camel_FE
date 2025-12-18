@@ -18,7 +18,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cockycamel.ui.theme.CockyCamelTheme
 import com.example.cockycamel.ui.*
-import com.example.cockycamel.ui.AppViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
@@ -29,42 +28,38 @@ class MainActivity : ComponentActivity() {
                 val viewModel: AppViewModel = viewModel()
                 val navController = rememberNavController()
 
-                NavHost(navController = navController, startDestination = "Main") {
+                NavHost(
+                    navController = navController,
+                    startDestination = "Main"
+                ) {
 
                     composable("Main") {
                         MainScreen(navController)
                     }
 
-                    composable("Home") {
-                        HomeScreen(
-                            onBack = { navController.popBackStack() }
-                        )
-                    }
-
                     composable("Login") {
                         LoginScreen(
                             viewModel = viewModel,
-                            onBack = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable("List") {
-                        NursesListScreen(
-                            viewModel = viewModel,
-                            onBack = { navController.popBackStack() }
-                        )
-                    }
-
-                    composable("Search") {
-                        SearchNurseScreen(
-                            viewModel = viewModel,
-                            onBack = { navController.popBackStack() }
+                            onLoginSuccess = {
+                                navController.navigate("Home") {
+                                    popUpTo("Main") { inclusive = false }
+                                }
+                            },
+                            onBack = {
+                                navController.popBackStack()
+                            }
                         )
                     }
 
                     composable("Register") {
                         RegisterScreen(
                             viewModel = viewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("Home") {
+                        HomeScreen(
                             onBack = { navController.popBackStack() }
                         )
                     }
@@ -99,15 +94,6 @@ fun MainScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(30.dp))
-
-        Button(
-            onClick = { navController.navigate("Home") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Ir a HomeScreen")
-        }
-
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
@@ -120,28 +106,10 @@ fun MainScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(12.dp))
 
         Button(
-            onClick = { navController.navigate("List") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Lista de enfermeros")
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Button(
-            onClick = { navController.navigate("Search") },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Buscar enfermero")
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Button(
             onClick = { navController.navigate("Register") },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Registrar enfermero")
+            Text("Register")
         }
     }
 }
