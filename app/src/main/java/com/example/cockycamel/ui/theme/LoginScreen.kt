@@ -16,10 +16,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.cockycamel.R
 
-
 @Composable
 fun LoginScreen(
     viewModel: AppViewModel,
+    onLoginSuccess: () -> Unit,
     onBack: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
@@ -88,10 +88,18 @@ fun LoginScreen(
                     val loginExitoso = viewModel.login(username, password)
 
                     if (loginExitoso) {
-                        Toast.makeText(context, "Bienvenido $username", Toast.LENGTH_SHORT).show()
-                        onBack()
+                        Toast.makeText(
+                            context,
+                            "Bienvenido $username",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onLoginSuccess()
                     } else {
-                        Toast.makeText(context, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Usuario o contraseña incorrectos",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -99,13 +107,10 @@ fun LoginScreen(
                 Text(stringResource(R.string.btn_login))
             }
 
-
             Spacer(modifier = Modifier.height(15.dp))
 
             TextButton(
-                onClick = {
-                    showForgotPassword = !showForgotPassword
-                }
+                onClick = { showForgotPassword = !showForgotPassword }
             ) {
                 Text(stringResource(R.string.btn_forgot_password))
             }
@@ -118,6 +123,7 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
+
             Spacer(modifier = Modifier.height(10.dp))
 
             Button(
