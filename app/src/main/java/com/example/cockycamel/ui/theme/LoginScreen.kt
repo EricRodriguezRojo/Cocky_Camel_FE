@@ -85,14 +85,13 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    // Lógica simulada
-                    if (username == "admin" && password == "1234") {
-                        // Actualizamos el estado en el ViewModel (Uso correcto)
-                        viewModel.login(username)
-                        Toast.makeText(context, "Login OK", Toast.LENGTH_SHORT).show()
-                        onBack() // Navegamos atrás al completar
+                    val loginExitoso = viewModel.login(username, password)
+
+                    if (loginExitoso) {
+                        Toast.makeText(context, "Bienvenido $username", Toast.LENGTH_SHORT).show()
+                        onBack()
                     } else {
-                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
@@ -105,14 +104,13 @@ fun LoginScreen(
 
             TextButton(
                 onClick = {
-                    // Uso correcto de la variable de estado
                     showForgotPassword = !showForgotPassword
                 }
             ) {
                 Text(stringResource(R.string.btn_forgot_password))
             }
 
-            if (showForgotPassword) { // Uso correcto de la variable de estado
+            if (showForgotPassword) {
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = stringResource(R.string.login_forgot_password_info),
