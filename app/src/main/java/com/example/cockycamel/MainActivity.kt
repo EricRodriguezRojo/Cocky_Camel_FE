@@ -134,5 +134,14 @@ fun MainScreen(navController: NavController) {
         ) {
             Text("Buscar enfermero")
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = { navController.navigate("Register") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Registrar enfermero")
+        }
     }
 }

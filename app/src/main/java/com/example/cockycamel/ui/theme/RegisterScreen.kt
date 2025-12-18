@@ -58,9 +58,11 @@ fun RegisterScreen(viewModel: AppViewModel, onBack: () -> Unit) {
         Button(
             onClick = {
                 if (nombre.isNotBlank() && especialidad.isNotBlank()) {
-                    // Aquí se simula el guardado. En una fase real llamaríamos a una función del ViewModel
+                    val expInt = experiencia.toIntOrNull() ?: 0
+
+                    viewModel.agregarEnfermero(nombre, especialidad, expInt)
                     Toast.makeText(context, "Enfermero $nombre registrado con éxito", Toast.LENGTH_SHORT).show()
-                    onBack() // Volver tras registrar
+                    onBack()
                 } else {
                     Toast.makeText(context, "Por favor, rellena los campos obligatorios", Toast.LENGTH_SHORT).show()
                 }
