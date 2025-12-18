@@ -38,4 +38,12 @@ class AppViewModel : ViewModel() {
     fun login(user: String) {
         _uiState.update { it.copy(isLoggedIn = true, currentUser = user) }
     }
+
+    fun agregarEnfermero(nombre: String, especialidad: String, experiencia: Int) {
+        val nuevoId = (_uiState.value.enfermeros.maxOfOrNull { it.id } ?: 0) + 1
+        val nuevoEnfermero = Nurse(nuevoId, nombre, especialidad, experiencia)
+        _uiState.update { currentState ->
+            currentState.copy(enfermeros = currentState.enfermeros + nuevoEnfermero)
+        }
+    }
 }

@@ -61,6 +61,13 @@ class MainActivity : ComponentActivity() {
                             onBack = { navController.popBackStack() }
                         )
                     }
+
+                    composable("Register") {
+                        RegisterScreen(
+                            viewModel = viewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
             }
         }
