@@ -92,7 +92,7 @@ fun NurseCard(nurse: Nurse) {
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
-                    text = nurse.nombre,
+                    text = nurse.name,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary
@@ -109,14 +109,14 @@ fun NurseCard(nurse: Nurse) {
                 )
 
                 Text(
-                    text = stringResource(R.string.nurse_specialty_format, nurse.especialidad),
+                    text = stringResource(R.string.nurse_specialty_format, nurse.user),
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.padding(start = 56.dp)
                 )
 
                 Text(
-                    text = stringResource(R.string.nurse_experience_format, nurse.experiencia),
+                    text = stringResource(R.string.nurse_experience_format, nurse.user),
                     fontSize = 14.sp,
                     color = androidx.compose.ui.graphics.Color.Gray,
                     modifier = Modifier.padding(start = 56.dp)

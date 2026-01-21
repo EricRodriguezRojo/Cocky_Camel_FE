@@ -1,21 +1,30 @@
 package com.example.cockycamel.ui
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-data class User(
-    val username: String,
-    val password: String
-)
+data class User(val username: String, val password: String)
+
 data class Nurse(
     val id: Int,
-    val nombre: String,
-    val especialidad: String,
-    val experiencia: Int
+    val name: String,
+    val user: String,
+    val password: String
 )
+
+sealed interface NurseUiState {
+    data class Success(val enfermeros: List<Nurse>) : NurseUiState
+    object Error : NurseUiState
+    object Loading : NurseUiState
+}
 
 data class AppUiState(
     val enfermeros: List<Nurse> = emptyList(),
@@ -28,13 +37,13 @@ class AppViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
+    var nurseUiState: NurseUiState by mutableStateOf(NurseUiState.Loading)
+        private set
+
     init {
         val datosIniciales = listOf(
-            Nurse(1, "María López", "Pediatría", 5),
-            Nurse(2, "Juan Pérez", "Urgencias", 8),
-            Nurse(3, "Ana Torres", "Cuidados intensivos", 6),
-            Nurse(4, "David Soler", "Geriatría", 4),
-            Nurse(5, "Lucía Martín", "Cardiología", 7)
+            Nurse(1, "María López", "mlopez", "1234"),
+            Nurse(2, "Juan Pérez", "jperez", "abcd")
         )
         _uiState.update { it.copy(enfermeros = datosIniciales) }
     }
@@ -44,25 +53,31 @@ class AppViewModel : ViewModel() {
         _uiState.update { it.copy(usuarios = it.usuarios + nuevoUsuario) }
     }
 
-    // funcion para simular login
     fun login(user: String, pass: String): Boolean {
         val usuarioEncontrado = _uiState.value.usuarios.find {
             it.username == user && it.password == pass
         }
-
         return if (usuarioEncontrado != null) {
             _uiState.update { it.copy(isLoggedIn = true, currentUser = user) }
             true
-        } else {
-            false
-        }
+        } else false
     }
 
-    fun agregarEnfermero(nombre: String, especialidad: String, experiencia: Int) {
+    fun agregarEnfermero(nombreCompleto: String, usuario: String, pass: String) {
         val nuevoId = (_uiState.value.enfermeros.maxOfOrNull { it.id } ?: 0) + 1
-        val nuevoEnfermero = Nurse(nuevoId, nombre, especialidad, experiencia)
-        _uiState.update { currentState ->
-            currentState.copy(enfermeros = currentState.enfermeros + nuevoEnfermero)
+        val nuevoEnfermero = Nurse(nuevoId, nombreCompleto, usuario, pass)
+        _uiState.update { it.copy(enfermeros = it.enfermeros + nuevoEnfermero) }
+    }
+
+    fun fetchEnfermeros() {
+        viewModelScope.launch {
+            nurseUiState = NurseUiState.Loading
+            try {
+                val listResult = NurseApi.retrofitService.getEnfermeros()
+                nurseUiState = NurseUiState.Success(listResult)
+            } catch (e: Exception) {
+                nurseUiState = NurseUiState.Error
+            }
         }
     }
 }

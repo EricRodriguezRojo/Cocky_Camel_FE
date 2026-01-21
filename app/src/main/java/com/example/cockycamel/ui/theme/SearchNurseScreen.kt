@@ -26,7 +26,7 @@ fun SearchNurseScreen(viewModel: AppViewModel, onBack: () -> Unit) {
     val uiState by viewModel.uiState.collectAsState()
 
     val searchResults = uiState.enfermeros.filter {
-        it.nombre.contains(searchText, ignoreCase = true)
+        it.name.contains(searchText, ignoreCase = true)
     }
 
 
@@ -120,7 +120,7 @@ fun EnfermeroCard(enfermero: Nurse) {
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Text(
-                    text = enfermero.nombre,
+                    text = enfermero.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -137,7 +137,7 @@ fun EnfermeroCard(enfermero: Nurse) {
                 )
 
                 Text(
-                    text = stringResource(R.string.nurse_specialty_format, enfermero.especialidad),
+                    text = stringResource(R.string.nurse_specialty_format, enfermero.user),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.padding(start = 56.dp)
