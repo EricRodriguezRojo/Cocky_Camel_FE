@@ -1,5 +1,6 @@
 package com.example.cockycamel.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,6 +11,32 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Path
+
+interface NurseApiService {
+    @GET("nurse/index")
+    suspend fun getAllNurses(): List<Nurse>
+
+    @GET("nurse/name/{name}")
+    suspend fun getNurseByName(@Path("name") name: String): Nurse
+}
+
+
+object RetrofitClient {
+    private const val BASE_URL = "http://10.0.2.2:8080/"
+
+    val service: NurseApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NurseApiService::class.java)
+    }
+}
+
 
 data class User(val username: String, val password: String)
 
@@ -19,6 +46,7 @@ data class Nurse(
     val user: String,
     val password: String
 )
+
 
 sealed interface NurseUiState {
     data class Success(val enfermeros: List<Nurse>) : NurseUiState
@@ -33,6 +61,7 @@ data class AppUiState(
     val currentUser: String = ""
 )
 
+
 class AppViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
@@ -41,11 +70,42 @@ class AppViewModel : ViewModel() {
         private set
 
     init {
-        val datosIniciales = listOf(
-            Nurse(1, "María López", "mlopez", "1234"),
-            Nurse(2, "Juan Pérez", "jperez", "abcd")
-        )
-        _uiState.update { it.copy(enfermeros = datosIniciales) }
+        fetchEnfermeros()
+    }
+
+    fun fetchEnfermeros() {
+        viewModelScope.launch {
+            nurseUiState = NurseUiState.Loading
+            try {
+                val listaRemota = RetrofitClient.service.getAllNurses()
+
+                _uiState.update { it.copy(enfermeros = listaRemota) }
+                nurseUiState = NurseUiState.Success(listaRemota)
+                Log.d("Retrofit", "Datos recibidos: ${listaRemota.size}")
+            } catch (e: Exception) {
+                Log.e("Retrofit", "Error al conectar: ${e.message}")
+                nurseUiState = NurseUiState.Error
+                _uiState.update { it.copy(enfermeros = emptyList()) }
+            }
+        }
+    }
+
+    fun buscarEnfermeroPorNombre(query: String) {
+        viewModelScope.launch {
+            if (query.isBlank()) {
+                fetchEnfermeros()
+                return@launch
+            }
+
+            try {
+                val enfermeroEncontrado = RetrofitClient.service.getNurseByName(query)
+
+                _uiState.update { it.copy(enfermeros = listOf(enfermeroEncontrado)) }
+            } catch (e: Exception) {
+                Log.e("Retrofit", "No encontrado o error: ${e.message}")
+                _uiState.update { it.copy(enfermeros = emptyList()) }
+            }
+        }
     }
 
     fun registrarUsuario(user: String, pass: String) {
@@ -64,20 +124,5 @@ class AppViewModel : ViewModel() {
     }
 
     fun agregarEnfermero(nombreCompleto: String, usuario: String, pass: String) {
-        val nuevoId = (_uiState.value.enfermeros.maxOfOrNull { it.id } ?: 0) + 1
-        val nuevoEnfermero = Nurse(nuevoId, nombreCompleto, usuario, pass)
-        _uiState.update { it.copy(enfermeros = it.enfermeros + nuevoEnfermero) }
-    }
-
-    fun fetchEnfermeros() {
-        viewModelScope.launch {
-            nurseUiState = NurseUiState.Loading
-            try {
-                val listResult = NurseApi.retrofitService.getEnfermeros()
-                nurseUiState = NurseUiState.Success(listResult)
-            } catch (e: Exception) {
-                nurseUiState = NurseUiState.Error
-            }
-        }
     }
 }
