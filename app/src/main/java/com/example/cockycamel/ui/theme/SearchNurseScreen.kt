@@ -25,11 +25,6 @@ fun SearchNurseScreen(viewModel: AppViewModel, onBack: () -> Unit) {
 
     val uiState by viewModel.uiState.collectAsState()
 
-    val searchResults = uiState.enfermeros.filter {
-        it.name.contains(searchText, ignoreCase = true)
-    }
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,27 +33,29 @@ fun SearchNurseScreen(viewModel: AppViewModel, onBack: () -> Unit) {
     ) {
         OutlinedTextField(
             value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text(stringResource(R.string.search_hint)) },
+            onValueChange = {
+                searchText = it
+                viewModel.buscarEnfermeroPorNombre(it)
+            },
+            label = { Text("Buscar enfermero (Nombre exacto)") },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Search,
-                    contentDescription = stringResource(R.string.search_icon_desc)
+                    contentDescription = "Buscar"
                 )
             },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = MaterialTheme.colorScheme.primary,
                 focusedLabelColor = MaterialTheme.colorScheme.primary,
-                cursorColor = MaterialTheme.colorScheme.primary,
-                focusedLeadingIconColor = MaterialTheme.colorScheme.primary
+                cursorColor = MaterialTheme.colorScheme.primary
             )
         )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = stringResource(R.string.search_results_header),
+            text = "Resultados:",
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -66,23 +63,31 @@ fun SearchNurseScreen(viewModel: AppViewModel, onBack: () -> Unit) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        if (uiState.enfermeros.isEmpty() && searchText.isNotEmpty()) {
+            Text("No se encontraron enfermeros con ese nombre en la base de datos.")
+        }
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(searchResults) { enfermero ->
+            items(uiState.enfermeros) { enfermero ->
                 EnfermeroCard(enfermero = enfermero)
             }
         }
+
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = { onBack() },
+            onClick = {
+                viewModel.fetchEnfermeros()
+                onBack()
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )
         ) {
-            Text(stringResource(R.string.btn_go_back))
+            Text("Volver")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -112,7 +117,7 @@ fun EnfermeroCard(enfermero: Nurse) {
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.img_home),
-                        contentDescription = stringResource(R.string.profile_placeholder_desc),
+                        contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.padding(8.dp)
                     )
@@ -129,15 +134,13 @@ fun EnfermeroCard(enfermero: Nurse) {
 
             if (isExpanded) {
                 Spacer(modifier = Modifier.height(12.dp))
-
                 HorizontalDivider(
-                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f),
+                    modifier = Modifier.padding(start = 56.dp, bottom = 8.dp),
                     thickness = 1.dp,
-                    modifier = Modifier.padding(start = 56.dp, bottom = 8.dp)
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
                 )
-
                 Text(
-                    text = stringResource(R.string.nurse_specialty_format, enfermero.user),
+                    text = "Usuario: ${enfermero.user}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.tertiary,
                     modifier = Modifier.padding(start = 56.dp)
