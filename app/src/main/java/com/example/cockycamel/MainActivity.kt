@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+
                     composable("Home") {
                         HomeScreen(
                             onNavigateToList = { navController.navigate("ListNurses") },

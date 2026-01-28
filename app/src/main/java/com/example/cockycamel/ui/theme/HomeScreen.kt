@@ -46,6 +46,7 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+
         Text(
             text = stringResource(R.string.home_welcome_text),
             textAlign = TextAlign.Center,
