@@ -15,8 +15,10 @@ import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface NurseApiService {
@@ -34,6 +36,15 @@ interface NurseApiService {
         @Path("user") user: String,
         @Path("password") pass: String
     ): ResponseBody
+
+    @GET("nurse/{id}")
+    suspend fun getNurseById(@Path("id") id: Int): Nurse
+
+    @PUT("nurse/{id}")
+    suspend fun updateNurse(@Path("id") id: Int, @Body nurse: Nurse): ResponseBody
+
+    @DELETE("nurse/{id}")
+    suspend fun deleteNurse(@Path("id") id: Int): ResponseBody
 }
 
 object RetrofitClient {
@@ -157,6 +168,48 @@ class AppViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("Retrofit", "Error Login: ${e.message}")
                 onResult(false, "Error de conexión o credenciales inválidas")
+            }
+        }
+    }
+
+    var loggedInNurseId by mutableStateOf<Int?>(null)
+
+    fun cargarPerfil(id: Int) {
+        viewModelScope.launch {
+            try {
+                val nurse = RetrofitClient.service.getNurseById(id)
+                // Aquí podrías actualizar un estado específico para el perfil si fuera necesario
+                Log.d("Retrofit", "Perfil cargado: ${nurse.name}")
+            } catch (e: Exception) {
+                Log.e("Retrofit", "Error al cargar perfil: ${e.message}")
+            }
+        }
+    }
+
+    fun actualizarPerfil(id: Int, nombre: String, usuario: String, pass: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val nurseUpdate = Nurse(id, nombre, usuario, pass)
+                val response = RetrofitClient.service.updateNurse(id, nurseUpdate)
+                val mensaje = response.string()
+                fetchEnfermeros() // Refrescar lista global
+                onResult(true, mensaje)
+            } catch (e: Exception) {
+                onResult(false, "Error al actualizar: ${e.message}")
+            }
+        }
+    }
+
+    fun eliminarCuenta(id: Int, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.service.deleteNurse(id)
+                val mensaje = response.string()
+                _uiState.update { it.copy(isLoggedIn = false, currentUser = "") }
+                loggedInNurseId = null
+                onResult(true, mensaje)
+            } catch (e: Exception) {
+                onResult(false, "Error al eliminar: ${e.message}")
             }
         }
     }

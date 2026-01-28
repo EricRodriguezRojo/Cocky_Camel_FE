@@ -62,6 +62,7 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(
                             onNavigateToList = { navController.navigate("ListNurses") },
                             onNavigateToSearch = { navController.navigate("SearchNurses") },
+                            onNavigateToProfile = { navController.navigate("Profile") },
                             onBack = { navController.popBackStack() }
                         )
                     }
@@ -76,6 +77,18 @@ class MainActivity : ComponentActivity() {
                     composable("SearchNurses") {
                         SearchNurseScreen(
                             viewModel = viewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+
+                    composable("Profile") {
+                        ProfileScreen(
+                            viewModel = viewModel,
+                            onLogout = {
+                                navController.navigate("Login") {
+                                    popUpTo("Main") { inclusive = false }
+                                }
+                            },
                             onBack = { navController.popBackStack() }
                         )
                     }

@@ -24,6 +24,7 @@ import java.time.format.DateTimeFormatter
 fun HomeScreen(
     onNavigateToList: () -> Unit,
     onNavigateToSearch: () -> Unit,
+    onNavigateToProfile: () -> Unit,
     onBack: () -> Unit
 ) {
     var showDateTime by remember { mutableStateOf(false) }
@@ -71,6 +72,16 @@ fun HomeScreen(
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
         ) {
             Text("Buscar Enfermeros")
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = { onNavigateToProfile() },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+        ) {
+            Text("Mi Perfil")
         }
 
 
