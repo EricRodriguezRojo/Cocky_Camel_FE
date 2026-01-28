@@ -11,9 +11,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface NurseApiService {
@@ -22,8 +25,10 @@ interface NurseApiService {
 
     @GET("nurse/name/{name}")
     suspend fun getNurseByName(@Path("name") name: String): Nurse
-}
 
+    @POST("nurse")
+    suspend fun createNurse(@Body nurse: Nurse): ResponseBody
+}
 
 object RetrofitClient {
     private const val BASE_URL = "http://10.0.2.2:8080/"
@@ -37,7 +42,6 @@ object RetrofitClient {
     }
 }
 
-
 data class User(val username: String, val password: String)
 
 data class Nurse(
@@ -46,7 +50,6 @@ data class Nurse(
     val user: String,
     val password: String
 )
-
 
 sealed interface NurseUiState {
     data class Success(val enfermeros: List<Nurse>) : NurseUiState
@@ -60,7 +63,6 @@ data class AppUiState(
     val isLoggedIn: Boolean = false,
     val currentUser: String = ""
 )
-
 
 class AppViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AppUiState())
@@ -78,12 +80,11 @@ class AppViewModel : ViewModel() {
             nurseUiState = NurseUiState.Loading
             try {
                 val listaRemota = RetrofitClient.service.getAllNurses()
-
                 _uiState.update { it.copy(enfermeros = listaRemota) }
                 nurseUiState = NurseUiState.Success(listaRemota)
                 Log.d("Retrofit", "Datos recibidos: ${listaRemota.size}")
             } catch (e: Exception) {
-                Log.e("Retrofit", "Error al conectar: ${e.message}")
+                Log.e("Retrofit", "Error al listar: ${e.message}")
                 nurseUiState = NurseUiState.Error
                 _uiState.update { it.copy(enfermeros = emptyList()) }
             }
@@ -96,14 +97,26 @@ class AppViewModel : ViewModel() {
                 fetchEnfermeros()
                 return@launch
             }
-
             try {
                 val enfermeroEncontrado = RetrofitClient.service.getNurseByName(query)
-
                 _uiState.update { it.copy(enfermeros = listOf(enfermeroEncontrado)) }
             } catch (e: Exception) {
-                Log.e("Retrofit", "No encontrado o error: ${e.message}")
+                Log.e("Retrofit", "No encontrado o error busqueda: ${e.message}")
                 _uiState.update { it.copy(enfermeros = emptyList()) }
+            }
+        }
+    }
+
+    fun agregarEnfermero(nombreCompleto: String, usuario: String, pass: String) {
+        viewModelScope.launch {
+            try {
+                val nuevoEnfermero = Nurse(0, nombreCompleto, usuario, pass)
+                val respuesta = RetrofitClient.service.createNurse(nuevoEnfermero)
+                Log.d("Retrofit", "Creado: ${respuesta.string()}")
+
+                fetchEnfermeros()
+            } catch (e: Exception) {
+                Log.e("Retrofit", "Error al crear: ${e.message}")
             }
         }
     }
@@ -121,8 +134,5 @@ class AppViewModel : ViewModel() {
             _uiState.update { it.copy(isLoggedIn = true, currentUser = user) }
             true
         } else false
-    }
-
-    fun agregarEnfermero(nombreCompleto: String, usuario: String, pass: String) {
     }
 }

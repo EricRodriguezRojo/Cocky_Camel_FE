@@ -21,7 +21,10 @@ fun RegisterScreen(viewModel: AppViewModel, onBack: () -> Unit) {
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(20.dp).verticalScroll(rememberScrollState()),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Registro de Enfermero", style = MaterialTheme.typography.headlineMedium)
@@ -53,13 +56,11 @@ fun RegisterScreen(viewModel: AppViewModel, onBack: () -> Unit) {
         Button(
             onClick = {
                 if (nombreCompleto.isNotBlank() && usuarioLogin.isNotBlank() && password.isNotBlank()) {
-                    // Llamamos a la función con los 3 campos que pide tu Eclipse
                     viewModel.agregarEnfermero(nombreCompleto, usuarioLogin, password)
 
-                    // También lo registramos como usuario general para que pueda hacer login
                     viewModel.registrarUsuario(usuarioLogin, password)
 
-                    Toast.makeText(context, "Enfermero guardado con éxito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Solicitud de registro enviada", Toast.LENGTH_SHORT).show()
                     onBack()
                 } else {
                     Toast.makeText(context, "Rellena todos los campos", Toast.LENGTH_SHORT).show()
@@ -69,6 +70,8 @@ fun RegisterScreen(viewModel: AppViewModel, onBack: () -> Unit) {
         ) {
             Text("Guardar en Base de Datos")
         }
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         TextButton(onClick = onBack) { Text("Cancelar") }
     }
