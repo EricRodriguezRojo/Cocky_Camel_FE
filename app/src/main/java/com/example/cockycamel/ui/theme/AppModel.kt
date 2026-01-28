@@ -28,6 +28,12 @@ interface NurseApiService {
 
     @POST("nurse")
     suspend fun createNurse(@Body nurse: Nurse): ResponseBody
+
+    @POST("nurse/login/{user}/{password}")
+    suspend fun loginNurse(
+        @Path("user") user: String,
+        @Path("password") pass: String
+    ): ResponseBody
 }
 
 object RetrofitClient {
@@ -134,5 +140,24 @@ class AppViewModel : ViewModel() {
             _uiState.update { it.copy(isLoggedIn = true, currentUser = user) }
             true
         } else false
+    }
+
+    fun loginRemote(user: String, pass: String, onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val respuesta = RetrofitClient.service.loginNurse(user, pass)
+                val mensaje = respuesta.string()
+
+                if (mensaje.contains("Login correcto", ignoreCase = true)) {
+                    _uiState.update { it.copy(isLoggedIn = true, currentUser = user) }
+                    onResult(true, mensaje)
+                } else {
+                    onResult(false, mensaje)
+                }
+            } catch (e: Exception) {
+                Log.e("Retrofit", "Error Login: ${e.message}")
+                onResult(false, "Error de conexión o credenciales inválidas")
+            }
+        }
     }
 }
