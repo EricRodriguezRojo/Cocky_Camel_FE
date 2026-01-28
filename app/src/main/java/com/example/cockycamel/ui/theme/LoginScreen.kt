@@ -25,64 +25,118 @@ fun LoginScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
+    var showForgotPassword by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(20.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
             Image(
                 painter = painterResource(id = R.drawable.img_home),
-                contentDescription = null,
-                modifier = Modifier.size(250.dp)
+                contentDescription = stringResource(R.string.home_icon_desc),
+                modifier = Modifier.size(350.dp)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Text(text = "Login Enfermero", style = MaterialTheme.typography.headlineMedium)
+            Text(
+                text = stringResource(R.string.login_welcome),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
+
+            val textFieldColors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary
+            )
 
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Usuario") },
-                modifier = Modifier.fillMaxWidth()
+                label = { Text(stringResource(R.string.login_label_username)) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
+                label = { Text(stringResource(R.string.login_label_password)) },
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = textFieldColors
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
                 onClick = {
-                    if (username.isNotBlank() && password.isNotBlank()) {
-                        // Usamos la nueva función añadida para conectar con Eclipse
-                        viewModel.loginRemote(username, password) { exito, mensaje ->
-                            Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show()
-                            if (exito) onLoginSuccess()
-                        }
+                    val loginExitoso = viewModel.login(username, password)
+
+                    if (loginExitoso) {
+                        Toast.makeText(
+                            context,
+                            "Bienvenido $username",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onLoginSuccess()
                     } else {
-                        Toast.makeText(context, "Rellena los campos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Usuario o contraseña incorrectos",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Entrar")
+                Text(stringResource(R.string.btn_login))
             }
 
-            TextButton(onClick = onBack) { Text("Volver") }
+            Spacer(modifier = Modifier.height(15.dp))
+
+            TextButton(
+                onClick = { showForgotPassword = !showForgotPassword }
+            ) {
+                Text(stringResource(R.string.btn_forgot_password))
+            }
+
+            if (showForgotPassword) {
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = stringResource(R.string.login_forgot_password_info),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Button(
+                onClick = { onBack() },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Text(stringResource(R.string.btn_go_back))
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
