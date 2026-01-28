@@ -29,6 +29,7 @@ fun HomeScreen(
     var showDateTime by remember { mutableStateOf(false) }
     var dateTimeText by remember { mutableStateOf("") }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,6 +45,7 @@ fun HomeScreen(
         )
 
         Spacer(modifier = Modifier.height(20.dp))
+
 
         Text(
             text = stringResource(R.string.home_welcome_text),
