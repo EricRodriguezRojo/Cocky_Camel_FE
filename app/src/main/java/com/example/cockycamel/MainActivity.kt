@@ -51,6 +51,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
+
                     composable("Register") {
                         RegisterScreen(
                             viewModel = viewModel,

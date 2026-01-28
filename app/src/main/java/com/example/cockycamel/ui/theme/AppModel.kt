@@ -172,6 +172,7 @@ class AppViewModel : ViewModel() {
         }
     }
 
+
     var loggedInNurseId by mutableStateOf<Int?>(null)
 
     fun cargarPerfil(id: Int) {
