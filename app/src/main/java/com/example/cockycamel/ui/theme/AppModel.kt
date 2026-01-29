@@ -172,7 +172,6 @@ class AppViewModel : ViewModel() {
         }
     }
 
-
     var loggedInNurseId by mutableStateOf<Int?>(null)
 
     fun cargarPerfil(id: Int) {
@@ -200,7 +199,6 @@ class AppViewModel : ViewModel() {
             }
         }
     }
-
 
     fun eliminarCuenta(id: Int, onResult: (Boolean, String) -> Unit) {
         viewModelScope.launch {
