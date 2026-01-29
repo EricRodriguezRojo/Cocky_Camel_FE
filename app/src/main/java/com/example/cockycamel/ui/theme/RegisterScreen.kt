@@ -68,7 +68,7 @@ fun RegisterScreen(viewModel: AppViewModel, onBack: () -> Unit) {
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Guardar en Base de Datos")
+            Text("Guardar")
         }
 
         Spacer(modifier = Modifier.height(10.dp))
