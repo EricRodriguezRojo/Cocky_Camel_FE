@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 fun ProfileScreen(
     viewModel: AppViewModel,
     onLogout: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit // AÑADIDO: Parámetro para volver
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
@@ -47,6 +47,7 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
+        // Botón Actualizar Datos propias (Punto 17)
         Button(
             onClick = {
                 enfermero?.let {
@@ -62,6 +63,7 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
+        // Botón Darse de baja (Punto 18)
         Button(
             onClick = {
                 enfermero?.let {
@@ -79,6 +81,7 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // AÑADIDO: Botón para volver a la HomeScreen
         Button(
             onClick = onBack,
             colors = ButtonDefaults.buttonColors(
